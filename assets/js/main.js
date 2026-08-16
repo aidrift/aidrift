@@ -1,4 +1,4 @@
-// Drift43 — shared site behaviour
+// AIDrift — shared site behaviour
 
 // Mobile nav toggle
 const toggle = document.querySelector(".nav-toggle");

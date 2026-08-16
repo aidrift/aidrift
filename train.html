@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Train — Drift43</title>
-  <meta name="description" content="Software pipeline: state estimation, drift control, and learned policies for Drift43.">
+  <title>Train — AIDrift</title>
+  <meta name="description" content="Software pipeline: state estimation, drift control, and learned policies for AIDrift.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
@@ -13,7 +13,7 @@
 
 <nav class="site-nav">
   <div class="nav-inner">
-    <a class="brand" href="index.html">DRIFT<span class="badge43">43</span></a>
+    <a class="brand" href="index.html"><span class="badge43">AI</span>DRIFT</a>
     <button class="nav-toggle" aria-label="Menu">☰</button>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
@@ -30,7 +30,7 @@
   <div class="container">
     <h1>Software &amp; Training 🧠</h1>
     <p>
-      The Drift43 stack runs state estimation and control onboard at 100&nbsp;Hz, with an
+      The AIDrift stack runs state estimation and control onboard at 100&nbsp;Hz, with an
       overhead camera providing ground-truth localization for training and evaluation.
       <!-- TODO: adjust to the real pipeline -->
     </p>
@@ -68,22 +68,22 @@
     <h2>Quick start</h2>
     <p class="lead">Clone the repository, install dependencies, and run your first drift. <!-- TODO: real repo URL --></p>
     <pre class="code reveal"><span class="c"># clone and install</span>
-git clone https://github.com/YOUR-ORG/drift43.git
-cd drift43
+git clone https://github.com/YOUR-ORG/aidrift.git
+cd aidrift
 pip install -e .
 
 <span class="c"># calibrate the car (car stationary, on the track)</span>
-python -m drift43.calibrate --port /dev/ttyUSB0
+python -m aidrift.calibrate --port /dev/ttyUSB0
 
 <span class="c"># start overhead tracking</span>
-python -m drift43.tracker --camera 0 --marker-size 40
+python -m aidrift.tracker --camera 0 --marker-size 40
 
 <span class="c"># run the baseline drift controller</span>
-python -m drift43.run --controller equilibrium --radius 0.6
+python -m aidrift.run --controller equilibrium --radius 0.6
 
 <span class="c"># train a policy in simulation, then deploy</span>
-python -m drift43.train --config configs/drift_circle.yaml
-python -m drift43.run --controller learned --checkpoint runs/latest</pre>
+python -m aidrift.train --config configs/drift_circle.yaml
+python -m aidrift.run --controller learned --checkpoint runs/latest</pre>
   </div>
 </section>
 
@@ -125,7 +125,7 @@ python -m drift43.run --controller learned --checkpoint runs/latest</pre>
     <a href="contact.html">Contact</a>
   </div>
   <p>Your Lab / University</p>
-  <p>Licensed under the MIT License. © 2026 Drift43. All rights reserved.</p>
+  <p>Licensed under the MIT License. © 2026 AIDrift. All rights reserved.</p>
 </footer>
 
 <script src="assets/js/main.js"></script>
