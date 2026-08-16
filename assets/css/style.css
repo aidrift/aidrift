@@ -10,6 +10,7 @@
   --panel-edge: #232935;
   --text: #e8eaed;
   --text-dim: #9aa3b2;
+  --heading: #ffffff;
   --accent: #3ce8b6;
   --accent-soft: rgba(60, 232, 182, 0.12);
   --accent-2: #7ff5d4;
@@ -65,7 +66,7 @@ a:hover { text-decoration: underline; }
   font-weight: 800;
   font-size: 1.15rem;
   letter-spacing: 0.04em;
-  color: var(--text);
+  color: var(--heading);
 }
 .brand:hover { text-decoration: none; }
 .brand .badge43 {
@@ -123,6 +124,7 @@ a:hover { text-decoration: underline; }
   font-weight: 800;
   letter-spacing: -0.01em;
   line-height: 1.15;
+  color: var(--heading);
 }
 .hero h1 .accent { color: var(--accent); }
 
@@ -156,12 +158,13 @@ a:hover { text-decoration: underline; }
   font-size: 1.8rem;
   font-weight: 800;
   margin-bottom: 8px;
+  color: var(--heading);
 }
 .section h2 .accent { color: var(--accent); }
 .section .lead { color: var(--text-dim); max-width: 720px; margin-bottom: 32px; }
 
 .page-head { padding: 56px 0 8px; }
-.page-head h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+.page-head h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; color: var(--heading); }
 .page-head p { color: var(--text-dim); max-width: 720px; margin-top: 10px; }
 
 /* ---------- Cards / grids ---------- */
