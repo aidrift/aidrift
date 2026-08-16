@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Theory — AIDrift</title>
-  <meta name="description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, drift equilibria, counter-steering, and scaling laws at 1:43.">
+  <meta name="description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, Ackermann steering geometry, drift equilibria, counter-steering, and scaling laws at 1:43.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
   <meta property="og:title" content="Theory — AIDrift">
-  <meta property="og:description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, drift equilibria, counter-steering, and scaling laws at 1:43.">
+  <meta property="og:description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, Ackermann steering geometry, drift equilibria, counter-steering, and scaling laws at 1:43.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://aidrift.github.io/aidrift/theory.html">
   <meta property="og:image" content="https://aidrift.github.io/aidrift/assets/img/og.png">
@@ -40,18 +40,19 @@
     <p>
       A drift is not a loss of control — it is a controlled operating point that happens to be
       unstable. This page walks through the vehicle dynamics behind it: how a car's motion is
-      described, where tire forces run out, what defines a drift equilibrium, and why a 1:43
-      model is a physically meaningful place to study it.
+      described, where tire forces run out, what the front wheels are actually doing, what defines
+      a drift equilibrium, and why a 1:43 model is a physically meaningful place to study it.
     </p>
     <div class="step-toc">
       <a href="#state">1. Vehicle state</a>
       <a href="#bicycle">2. Single-track model</a>
       <a href="#tires">3. Tire forces</a>
-      <a href="#drift">4. What is a drift</a>
-      <a href="#stability">5. Stability</a>
-      <a href="#scaling">6. Scaling to 1:43</a>
-      <a href="#symbols">7. Symbols</a>
-      <a href="#reading">8. Further reading</a>
+      <a href="#steering">4. Steering geometry</a>
+      <a href="#drift">5. What is a drift</a>
+      <a href="#stability">6. Stability</a>
+      <a href="#scaling">7. Scaling to 1:43</a>
+      <a href="#symbols">8. Symbols</a>
+      <a href="#reading">9. Further reading</a>
     </div>
   </div>
 </header>
@@ -304,10 +305,197 @@
   </div>
 </section>
 
-<!-- ============================ 4. WHAT IS A DRIFT ============================ -->
-<section class="section alt" id="drift">
+<!-- ============================ 4. STEERING GEOMETRY ============================ -->
+<section class="section alt" id="steering">
   <div class="container">
-    <h2>4 — What a drift actually is</h2>
+    <h2>4 — Steering geometry: Ackermann and its limits</h2>
+    <div class="prose">
+      <p>
+        The single-track model collapses each axle into one wheel. A real car has two, and in a
+        turn they travel on circles of different radius — so they cannot point in the same
+        direction without fighting each other. The fix is two centuries old:
+        <strong>Ackermann steering geometry</strong>, patented by Georg Lankensperger in 1817 for
+        horse-drawn carriages and named after Rudolph Ackermann, who filed it in England.
+      </p>
+      <p>
+        The principle: for every wheel to roll without lateral scrub, the axes of all four wheels
+        must intersect at a single point — the <strong>instantaneous centre of rotation</strong>.
+        Since the rear axle does not steer, that point always lies on the extension of the rear
+        axle line, and the inner front wheel must be steered <em>more</em> than the outer one.
+      </p>
+    </div>
+
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+      <svg viewBox="0 0 720 580" role="img" aria-label="Top view of a car in a low-speed turn: all four wheel axes meet at the instantaneous centre of rotation, with the inner front wheel steered at a larger angle than the outer.">
+        <!-- wheelbase dimension -->
+        <line x1="170" y1="28" x2="410" y2="28" stroke="var(--text-dim)" stroke-width="1.5" marker-start="url(#ah-dim)" marker-end="url(#ah-dim)"/>
+        <text x="283" y="20" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">L</text>
+        <!-- track dimension -->
+        <line x1="92" y1="65" x2="92" y2="175" stroke="var(--text-dim)" stroke-width="1.5" marker-start="url(#ah-dim)" marker-end="url(#ah-dim)"/>
+        <text x="74" y="125" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">w</text>
+
+        <!-- radius lines to the ICR -->
+        <line x1="170" y1="520" x2="410" y2="175" stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="6 6"/>
+        <line x1="170" y1="520" x2="410" y2="65"  stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="6 6"/>
+        <line x1="170" y1="520" x2="170" y2="50"  stroke="var(--text-dim)" stroke-width="1.2" stroke-dasharray="6 6"/>
+
+        <!-- car body -->
+        <rect x="120" y="78" width="340" height="84" rx="16" fill="var(--bg)" stroke="var(--heading)" stroke-width="2.5"/>
+        <path d="M 430 96 L 452 120 L 430 144" fill="none" stroke="var(--heading)" stroke-width="2"/>
+
+        <!-- rear wheels (unsteered) -->
+        <rect x="153" y="59.5" width="34" height="11" rx="3" fill="var(--text-dim)"/>
+        <rect x="153" y="169.5" width="34" height="11" rx="3" fill="var(--text-dim)"/>
+
+        <!-- front wheels, Ackermann-steered -->
+        <g transform="rotate(27.8 410 65)">
+          <rect x="393" y="59.5" width="34" height="11" rx="3" fill="var(--accent)"/>
+        </g>
+        <g transform="rotate(34.8 410 175)">
+          <rect x="393" y="169.5" width="34" height="11" rx="3" fill="var(--accent)"/>
+        </g>
+
+        <!-- steer angle references and arcs -->
+        <line x1="410" y1="65" x2="478" y2="65" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+        <path d="M 456 65 A 46 46 0 0 1 450.7 86.5" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+        <text x="462" y="96" fill="var(--accent-2)" font-size="15" font-family="Georgia, serif" font-style="italic">δ<tspan baseline-shift="sub" font-size="10">o</tspan> = 28°</text>
+
+        <line x1="410" y1="175" x2="478" y2="175" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+        <path d="M 450 175 A 40 40 0 0 1 442.8 197.8" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+        <text x="452" y="212" fill="var(--accent-2)" font-size="15" font-family="Georgia, serif" font-style="italic">δ<tspan baseline-shift="sub" font-size="10">i</tspan> = 35°</text>
+
+        <text x="196" y="52" fill="var(--text-dim)" font-size="12" font-family="Montserrat, sans-serif">outer</text>
+        <text x="196" y="198" fill="var(--text-dim)" font-size="12" font-family="Montserrat, sans-serif">inner</text>
+
+        <!-- ICR -->
+        <circle cx="170" cy="520" r="8" fill="var(--accent)"/>
+        <circle cx="170" cy="520" r="15" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="196" y="516" fill="var(--accent)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">ICR</text>
+        <text x="196" y="536" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">instantaneous centre of rotation —</text>
+        <text x="196" y="553" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">every wheel axis passes through it</text>
+      </svg>
+      </div>
+      <figcaption>
+        A car in a low-speed right-hand turn, seen from above. The inner front wheel follows a
+        tighter circle, so it must be steered several degrees more than the outer one. Extend the
+        axis of each wheel and all four lines meet at the instantaneous centre of rotation, which
+        always sits on the rear axle line.
+      </figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>
+        Writing that condition out gives the Ackermann relation between the inner and outer
+        steering angles, the track width <var>w</var> and the wheelbase <var>L</var>:
+      </p>
+      <div class="eq">
+        cot <var>δ<sub>o</sub></var> − cot <var>δ<sub>i</sub></var> = <var>w</var> / <var>L</var>
+        <span class="note">In a real car this is realised purely mechanically, by a steering trapezoid: the steering arms are angled inward toward the centre of the rear axle. No electronics involved — the geometry does the work.</span>
+      </div>
+
+      <h3>Why racing cars deliberately get it "wrong"</h3>
+      <p>
+        Ackermann is derived from pure rolling — no slip angles anywhere. That assumption holds
+        while parking, and fails progressively as speed rises. Two effects work against it:
+      </p>
+      <ul>
+        <li>
+          Tires need slip angle to make force at all, so the "correct" geometric angle is no longer
+          the angle that maximises grip.
+        </li>
+        <li>
+          Lateral load transfer puts far more vertical load on the <em>outer</em> tire. A more
+          heavily loaded tire reaches its peak at a larger slip angle — so the outer wheel wants
+          <em>more</em> steer, not less.
+        </li>
+      </ul>
+      <p>
+        The result is that production cars implement only partial Ackermann, and many racing cars
+        run parallel steering or invert it entirely into <strong>anti-Ackermann</strong>.
+      </p>
+    </div>
+
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+      <svg viewBox="0 0 720 250" role="img" aria-label="Comparison of three front-wheel steering geometries: Ackermann with the inner wheel at a larger angle, parallel with equal angles, and anti-Ackermann with the outer wheel at a larger angle.">
+        <!-- panel 1: Ackermann -->
+        <g transform="translate(0,0)">
+          <text x="120" y="26" fill="var(--accent)" font-size="14" font-weight="700" text-anchor="middle" font-family="Montserrat, sans-serif">Ackermann</text>
+          <line x1="120" y1="85" x2="120" y2="155" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <line x1="96" y1="85" x2="172" y2="85" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="96" y1="155" x2="172" y2="155" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <g transform="rotate(20 120 85)"><rect x="100" y="80" width="40" height="10" rx="3" fill="var(--accent)"/></g>
+          <g transform="rotate(32 120 155)"><rect x="100" y="150" width="40" height="10" rx="3" fill="var(--accent)"/></g>
+          <text x="60" y="78" fill="var(--text-dim)" font-size="11.5" text-anchor="middle" font-family="Montserrat, sans-serif">outer</text>
+          <text x="60" y="162" fill="var(--text-dim)" font-size="11.5" text-anchor="middle" font-family="Montserrat, sans-serif">inner</text>
+          <text x="120" y="212" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">inner turns more</text>
+          <text x="120" y="230" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">ideal at low speed</text>
+        </g>
+        <!-- panel 2: parallel -->
+        <g transform="translate(240,0)">
+          <text x="120" y="26" fill="var(--heading)" font-size="14" font-weight="700" text-anchor="middle" font-family="Montserrat, sans-serif">Parallel</text>
+          <line x1="120" y1="85" x2="120" y2="155" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <line x1="96" y1="85" x2="172" y2="85" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="96" y1="155" x2="172" y2="155" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <g transform="rotate(26 120 85)"><rect x="100" y="80" width="40" height="10" rx="3" fill="var(--heading)"/></g>
+          <g transform="rotate(26 120 155)"><rect x="100" y="150" width="40" height="10" rx="3" fill="var(--heading)"/></g>
+          <text x="120" y="212" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">equal angles</text>
+          <text x="120" y="230" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">simple linkage</text>
+        </g>
+        <!-- panel 3: anti-Ackermann -->
+        <g transform="translate(480,0)">
+          <text x="120" y="26" fill="var(--accent-2)" font-size="14" font-weight="700" text-anchor="middle" font-family="Montserrat, sans-serif">Anti-Ackermann</text>
+          <line x1="120" y1="85" x2="120" y2="155" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <line x1="96" y1="85" x2="172" y2="85" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="96" y1="155" x2="172" y2="155" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <g transform="rotate(32 120 85)"><rect x="100" y="80" width="40" height="10" rx="3" fill="var(--accent-2)"/></g>
+          <g transform="rotate(20 120 155)"><rect x="100" y="150" width="40" height="10" rx="3" fill="var(--accent-2)"/></g>
+          <text x="120" y="212" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">outer turns more</text>
+          <text x="120" y="230" fill="var(--text-dim)" font-size="12" text-anchor="middle" font-family="Montserrat, sans-serif">suits high lateral load</text>
+        </g>
+      </svg>
+      </div>
+      <figcaption>
+        Three ways to arrange the same pair of front wheels. Ackermann is geometrically correct
+        when nothing slips; parallel is the simplest linkage; anti-Ackermann gives the heavily
+        loaded outer tire the larger slip angle it needs at speed.
+      </figcaption>
+    </figure>
+
+    <div class="prose">
+      <h3>And in a drift, it barely matters</h3>
+      <p>
+        Every version of this argument assumes the car is roughly following where it points. In a
+        drift at <var>β</var> = 40°, it is not. The whole vehicle is sliding, both front tires
+        already carry large slip angles imposed by the chassis attitude, and the few degrees of
+        difference between Ackermann and anti-Ackermann are lost in the noise.
+      </p>
+      <p>
+        What <em>does</em> matter to a drift car is far more basic:
+      </p>
+      <ul>
+        <li><b>Steering range.</b> Holding a large side-slip requires large counter-steer. Purpose-built drift cars use modified knuckles to reach 60–70° of lock instead of the usual 35°.</li>
+        <li><b>Symmetry.</b> Left and right lock must match, or the car behaves differently in each direction — an asymmetry a learning-based controller will happily absorb as a bias.</li>
+        <li><b>Resolution and repeatability.</b> The controller commands small corrections continuously; backlash in the linkage is a bigger enemy than imperfect geometry.</li>
+      </ul>
+      <div class="callout">
+        <h3>What this means for AIDrift</h3>
+        <p>
+          At 1:43 scale with a single servo and a printed linkage, exact Ackermann is neither
+          achievable nor worth chasing. The front end is designed for maximum symmetric lock and
+          minimum slop instead — see the servo and linkage steps on the
+          <a href="platform.html">Platform</a> page.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 5. WHAT IS A DRIFT ============================ -->
+<section class="section" id="drift">
+  <div class="container">
+    <h2>5 — What a drift actually is</h2>
     <div class="prose">
       <p>
         Set every derivative in the equations of motion to zero — <var>v̇<sub>x</sub></var> =
@@ -336,13 +524,107 @@
         the yaw rate: the car turns right while the front wheels point left. Far from being a
         corrective reflex, this is a structural property of the equilibrium itself.
       </p>
+    </div>
+
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+      <svg viewBox="0 0 960 580" role="img" aria-label="Four stages of a drift along one corner: turn-in with wheels into the corner, the rear stepping out, sustained counter-steer with the front wheels aligned with the direction of travel, and exit as side-slip collapses and the wheels straighten.">
+        <!-- legend -->
+        <g>
+          <line x1="44" y1="44" x2="76" y2="44" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+          <text x="86" y="49" fill="var(--text-dim)" font-size="13" font-family="Montserrat, sans-serif">velocity — where the car is going</text>
+          <rect x="44" y="66" width="32" height="14" rx="4" fill="var(--panel)" stroke="var(--heading)" stroke-width="2"/>
+          <text x="86" y="78" fill="var(--text-dim)" font-size="13" font-family="Montserrat, sans-serif">chassis — where the car is pointing</text>
+          <line x1="44" y1="100" x2="76" y2="100" stroke="var(--text-dim)" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="86" y="105" fill="var(--text-dim)" font-size="13" font-family="Montserrat, sans-serif">path travelled through the corner</text>
+        </g>
+
+        <!-- trajectory -->
+        <path d="M 141.3 491.2 A 330 330 0 0 1 796.8 474.1" fill="none"
+              stroke="var(--text-dim)" stroke-width="2.5" stroke-dasharray="9 8"/>
+
+        <!-- ============ 1 · TURN-IN ============ -->
+        <g transform="translate(145 462.7) rotate(-80)">
+          <rect x="-34" y="-16" width="68" height="32" rx="9" fill="var(--panel)" stroke="var(--heading)" stroke-width="2.5"/>
+          <path d="M 18 -9 L 28 0 L 18 9" fill="none" stroke="var(--heading)" stroke-width="2"/>
+          <rect x="-28" y="-24" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <rect x="-28" y="16" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <g transform="rotate(18 20 -20)"><rect x="11" y="-24" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+          <g transform="rotate(18 20 20)"><rect x="11" y="16" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+        </g>
+        <line x1="145" y1="462.7" x2="157.2" y2="393.8" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+        <text x="46" y="528" fill="var(--heading)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">1 · Turn-in</text>
+        <text x="46" y="547" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">wheels steered into the corner,</text>
+        <text x="46" y="564" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">β ≈ 0 — the car still tracks</text>
+
+        <!-- ============ 2 · INITIATION ============ -->
+        <g transform="translate(280.7 249.7) rotate(-20)">
+          <rect x="-34" y="-16" width="68" height="32" rx="9" fill="var(--panel)" stroke="var(--heading)" stroke-width="2.5"/>
+          <path d="M 18 -9 L 28 0 L 18 9" fill="none" stroke="var(--heading)" stroke-width="2"/>
+          <rect x="-28" y="-24" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <rect x="-28" y="16" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <rect x="11" y="-24" width="18" height="8" rx="3" fill="var(--accent)"/>
+          <rect x="11" y="16" width="18" height="8" rx="3" fill="var(--accent)"/>
+        </g>
+        <line x1="280.7" y1="249.7" x2="338" y2="209.6" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+        <text x="196" y="160" fill="var(--heading)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">2 · The rear steps out</text>
+        <text x="196" y="179" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">rear tires saturate, β starts to grow,</text>
+        <text x="196" y="196" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">steering sweeps back through centre</text>
+
+        <!-- ============ 3 · SUSTAINED DRIFT ============ -->
+        <!-- chassis axis + beta arc -->
+        <line x1="510.2" y1="192.5" x2="571.6" y2="258.3" stroke="var(--heading)" stroke-width="1.5" stroke-dasharray="5 5"/>
+        <path d="M 564.8 199.2 A 55 55 0 0 1 547.7 232.7" fill="none" stroke="var(--accent-2)" stroke-width="2.5"/>
+        <text x="576" y="228" fill="var(--accent-2)" font-size="17" font-family="Georgia, serif" font-style="italic">β</text>
+        <g transform="translate(510.2 192.5) rotate(47)">
+          <rect x="-34" y="-16" width="68" height="32" rx="9" fill="var(--panel)" stroke="var(--heading)" stroke-width="2.5"/>
+          <path d="M 18 -9 L 28 0 L 18 9" fill="none" stroke="var(--heading)" stroke-width="2"/>
+          <rect x="-28" y="-24" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <rect x="-28" y="16" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <g transform="rotate(-40 20 -20)"><rect x="11" y="-24" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+          <g transform="rotate(-40 20 20)"><rect x="11" y="16" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+        </g>
+        <line x1="510.2" y1="192.5" x2="587.6" y2="202" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+        <text x="404" y="106" fill="var(--accent)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">3 · Counter-steer — the drift</text>
+        <text x="404" y="125" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">chassis rotated 40° from the path, but the front</text>
+        <text x="404" y="142" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">wheels are turned back to face where it is going</text>
+
+        <!-- ============ 4 · EXIT ============ -->
+        <g transform="translate(730 316.8) rotate(70)">
+          <rect x="-34" y="-16" width="68" height="32" rx="9" fill="var(--panel)" stroke="var(--heading)" stroke-width="2.5"/>
+          <path d="M 18 -9 L 28 0 L 18 9" fill="none" stroke="var(--heading)" stroke-width="2"/>
+          <rect x="-28" y="-24" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <rect x="-28" y="16" width="18" height="8" rx="3" fill="var(--text-dim)"/>
+          <g transform="rotate(-18 20 -20)"><rect x="11" y="-24" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+          <g transform="rotate(-18 20 20)"><rect x="11" y="16" width="18" height="8" rx="3" fill="var(--accent)"/></g>
+        </g>
+        <line x1="730" y1="316.8" x2="773.1" y2="372" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+        <text x="782" y="286" fill="var(--heading)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">4 · Exit</text>
+        <text x="782" y="305" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">throttle eases, β collapses,</text>
+        <text x="782" y="322" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">wheels straighten as the</text>
+        <text x="782" y="339" fill="var(--text-dim)" font-size="12.5" font-family="Montserrat, sans-serif">rear tires recover grip</text>
+      </svg>
+      </div>
+      <figcaption>
+        One corner, four moments. Watch the mint front wheels: they turn <em>into</em> the corner at
+        turn-in (1), sweep back through centre as the rear breaks away (2), end up turned hard the
+        other way once the drift is established (3), and return toward centre on exit (4). Relative
+        to the chassis this is a huge counter-steer; relative to the road the wheels stay pointed
+        close to where the car is actually travelling the whole time.
+      </figcaption>
+    </figure>
+
+    <div class="prose">
       <div class="callout">
         <h3>Why counter-steer</h3>
         <p>
           With the rear axle saturated, it can no longer generate the lateral force needed to
-          balance the yaw moment. The front axle must supply it. Turning the front wheels
-          <em>away</em> from the corner is what puts them at the slip angle that produces a force
-          opposing the rotation — holding the car at a fixed side-slip instead of letting it spin.
+          balance the yaw moment. The front axle must supply it — and to make force efficiently the
+          front tires have to stay near their grip peak, at a <em>small</em> slip angle. Since the
+          chassis is rotated away from the direction of travel by <var>β</var>, the only way to keep
+          the front tires pointing near their own velocity is to turn them back by roughly that
+          same angle: <var>δ</var> ≈ <var>β</var>. The dramatic opposite lock is simply what
+          "keep the front wheels aligned with the road" looks like from inside a sideways car.
         </p>
       </div>
       <p>
@@ -355,10 +637,10 @@
   </div>
 </section>
 
-<!-- ============================ 5. STABILITY ============================ -->
-<section class="section" id="stability">
+<!-- ============================ 6. STABILITY ============================ -->
+<section class="section alt" id="stability">
   <div class="container">
-    <h2>5 — Why it is hard: an unstable equilibrium</h2>
+    <h2>6 — Why it is hard: an unstable equilibrium</h2>
     <div class="prose">
       <p>
         Linearize the dynamics about a drift equilibrium and examine the eigenvalues of the
@@ -398,10 +680,10 @@
   </div>
 </section>
 
-<!-- ============================ 6. SCALING ============================ -->
-<section class="section alt" id="scaling">
+<!-- ============================ 7. SCALING ============================ -->
+<section class="section" id="scaling">
   <div class="container">
-    <h2>6 — Why 1:43 is a real testbed</h2>
+    <h2>7 — Why 1:43 is a real testbed</h2>
     <div class="prose">
       <p>
         A fair objection to any scale model: does a palm-sized car actually drift like a real one,
@@ -444,10 +726,10 @@
   </div>
 </section>
 
-<!-- ============================ 7. SYMBOLS ============================ -->
-<section class="section" id="symbols">
+<!-- ============================ 8. SYMBOLS ============================ -->
+<section class="section alt" id="symbols">
   <div class="container">
-    <h2>7 — Symbols</h2>
+    <h2>8 — Symbols</h2>
     <div class="table-wrap reveal">
       <table class="bom">
         <thead>
@@ -455,7 +737,8 @@
         </thead>
         <tbody>
           <tr><td><var>β</var></td><td>Side-slip angle — heading vs. velocity</td><td>deg</td><td>20–60°</td></tr>
-          <tr><td><var>δ</var></td><td>Front steering angle</td><td>deg</td><td>counter-steered</td></tr>
+          <tr><td><var>δ</var></td><td>Front steering angle</td><td>deg</td><td>counter-steered, <var>δ</var> ≈ <var>β</var></td></tr>
+          <tr><td><var>δ<sub>i</sub></var>, <var>δ<sub>o</sub></var></td><td>Inner / outer front steering angle</td><td>deg</td><td>set by linkage geometry</td></tr>
           <tr><td><var>r</var></td><td>Yaw rate about the vertical axis</td><td>rad/s</td><td>high</td></tr>
           <tr><td><var>v<sub>x</sub></var>, <var>v<sub>y</sub></var></td><td>Body-frame longitudinal / lateral velocity</td><td>m/s</td><td>both large</td></tr>
           <tr><td><var>α<sub>f</sub></var>, <var>α<sub>r</sub></var></td><td>Front / rear tire slip angle</td><td>deg</td><td><var>α<sub>r</sub></var> saturated</td></tr>
@@ -464,6 +747,7 @@
           <tr><td><var>μ</var></td><td>Coefficient of friction, tire–surface</td><td>—</td><td>low by design</td></tr>
           <tr><td><var>C<sub>α</sub></var></td><td>Cornering stiffness</td><td>N/rad</td><td>valid only pre-peak</td></tr>
           <tr><td><var>a</var>, <var>b</var></td><td>CoG to front / rear axle distance</td><td>m</td><td>sets balance</td></tr>
+          <tr><td><var>L</var>, <var>w</var></td><td>Wheelbase, track width</td><td>m</td><td>fix Ackermann geometry</td></tr>
           <tr><td><var>m</var>, <var>I<sub>z</sub></var></td><td>Mass, yaw moment of inertia</td><td>kg, kg·m²</td><td>—</td></tr>
         </tbody>
       </table>
@@ -471,14 +755,15 @@
   </div>
 </section>
 
-<!-- ============================ 8. READING ============================ -->
-<section class="section alt" id="reading">
+<!-- ============================ 9. READING ============================ -->
+<section class="section" id="reading">
   <div class="container">
-    <h2>8 — Further reading</h2>
+    <h2>9 — Further reading</h2>
     <p class="lead">Standard references for the material on this page. <!-- TODO: add DOIs / links, and any lab-specific reading --></p>
     <ul class="reading">
       <li><b>H. B. Pacejka — <i>Tire and Vehicle Dynamics</i>.</b> The reference on tire force modelling, including the Magic Formula used to fit the curves in section 3.</li>
-      <li><b>R. Rajamani — <i>Vehicle Dynamics and Control</i>.</b> Clear derivation of the single-track model and of stability analysis for lateral vehicle dynamics.</li>
+      <li><b>R. Rajamani — <i>Vehicle Dynamics and Control</i>.</b> Clear derivation of the single-track model, Ackermann geometry, and stability analysis for lateral vehicle dynamics.</li>
+      <li><b>W. F. Milliken and D. L. Milliken — <i>Race Car Vehicle Dynamics</i>.</b> The standard treatment of steering geometry in competition, including why Ackermann is often reversed at racing speeds.</li>
       <li><b>R. Y. Hindiyeh and J. C. Gerdes — "Equilibrium Analysis of Drifting Vehicles for Control Design."</b> Establishes drift equilibria as unstable steady states and derives controllers that stabilize them.</li>
       <li><b>E. Velenis et al. — "Steady-State Cornering Equilibria and Stabilisation for a Vehicle During Extreme Operating Conditions."</b> Equilibrium analysis across the full range of cornering conditions, including sustained drift.</li>
       <li><b>J. Y. Goh and J. C. Gerdes — "Simultaneous Stabilization and Tracking of Basic Automobile Drifting Trajectories."</b> Extends drift stabilization from a fixed equilibrium to tracking a desired path.</li>
