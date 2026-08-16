@@ -10,9 +10,10 @@
   --panel-edge: #232935;
   --text: #e8eaed;
   --text-dim: #9aa3b2;
-  --accent: #ff4d2e;
-  --accent-soft: rgba(255, 77, 46, 0.12);
-  --accent-2: #ffb020;
+  --accent: #3ce8b6;
+  --accent-soft: rgba(60, 232, 182, 0.12);
+  --accent-2: #7ff5d4;
+  --on-accent: #05261c;
   --radius: 14px;
   --maxw: 1100px;
   --font: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -69,7 +70,7 @@ a:hover { text-decoration: underline; }
 .brand:hover { text-decoration: none; }
 .brand .badge43 {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border-radius: 6px;
   padding: 1px 7px;
   font-size: 0.85rem;
@@ -104,8 +105,8 @@ a:hover { text-decoration: underline; }
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(255, 77, 46, 0.14), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(255, 176, 32, 0.07), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 70% 20%, rgba(60, 232, 182, 0.13), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(127, 245, 212, 0.06), transparent 60%),
     var(--bg-alt);
   border-bottom: 1px solid var(--panel-edge);
 }
@@ -144,7 +145,7 @@ a:hover { text-decoration: underline; }
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .btn:hover { text-decoration: none; transform: translateY(-2px); }
-.btn-primary { background: var(--accent); color: #fff; box-shadow: 0 6px 22px rgba(255, 77, 46, 0.35); }
+.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 6px 22px rgba(60, 232, 182, 0.3); }
 .btn-ghost { border: 1px solid var(--panel-edge); color: var(--text); background: var(--panel); }
 
 /* ---------- Sections ---------- */
