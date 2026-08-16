@@ -304,6 +304,28 @@ pre.code .s { color: #a5d6ff; }
 .site-footer a { color: var(--text-dim); }
 .site-footer a:hover { color: var(--accent); }
 
+/* ---------- Nav GitHub icon ---------- */
+.nav-github { display: flex; align-items: center; color: var(--text-dim); padding: 8px; border-radius: 8px; margin-left: 4px; }
+.nav-github:hover { color: var(--accent); text-decoration: none; }
+
+/* ---------- Build step TOC ---------- */
+.step-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.step-toc a {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.step-toc a:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+.step { scroll-margin-top: 84px; }
+
+/* ---------- Copy button ---------- */
+button.btn { cursor: pointer; font-family: var(--font); font-size: 0.9rem; }
+.copy-bibtex { margin-top: 16px; }
+
 /* ---------- Reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
 .reveal.visible { opacity: 1; transform: none; }

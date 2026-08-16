@@ -13,6 +13,18 @@ document.querySelectorAll(".nav-links a").forEach((a) => {
   if (a.getAttribute("href") === here) a.classList.add("active");
 });
 
+// BibTeX copy button
+const copyBtn = document.querySelector(".copy-bibtex");
+if (copyBtn) {
+  copyBtn.addEventListener("click", () => {
+    const bib = document.querySelector("#bibtex");
+    navigator.clipboard.writeText(bib.innerText).then(() => {
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => (copyBtn.textContent = "Copy BibTeX"), 1500);
+    });
+  });
+}
+
 // Scroll-reveal animation
 const observer = new IntersectionObserver(
   (entries) => {
