@@ -1,6 +1,6 @@
 /* ============================================================
    AIDrift — site-wide styles
-   Dark motorsport theme. Accent: signal orange.
+   Dark motorsport theme. Accent: mint. Headings: pure white.
    ============================================================ */
 
 :root {
@@ -329,6 +329,67 @@ pre.code .s { color: #a5d6ff; }
 /* ---------- Copy button ---------- */
 button.btn { cursor: pointer; font-family: var(--font); font-size: 0.9rem; }
 .copy-bibtex { margin-top: 16px; }
+
+/* ---------- Theory page: prose, equations, figures ---------- */
+.prose { max-width: 760px; }
+.prose p { margin-bottom: 16px; color: var(--text); }
+.prose p + h3 { margin-top: 28px; }
+.prose h3 { color: var(--heading); font-size: 1.1rem; margin-bottom: 10px; }
+.prose ul, .prose ol { margin: 0 0 16px 22px; color: var(--text); }
+.prose li { margin-bottom: 8px; }
+.prose strong { color: var(--heading); }
+
+var, .v { font-family: "Cambria Math", Cambria, Georgia, serif; font-style: italic; color: var(--accent); }
+
+.eq {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 22px;
+  margin: 20px 0;
+  font-family: "Cambria Math", Cambria, Georgia, serif;
+  font-size: 1.08rem;
+  line-height: 2;
+  color: var(--heading);
+  overflow-x: auto;
+}
+.eq .note {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-style: normal;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+figure.diagram {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin: 24px 0;
+}
+figure.diagram figcaption { text-align: left; margin-top: 14px; }
+/* keep diagram labels legible on narrow screens: scroll rather than shrink */
+.diagram-scroll { overflow-x: auto; }
+.diagram-scroll svg { width: 100%; min-width: 600px; height: auto; }
+
+.callout {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.callout h3 { color: var(--accent); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.callout p { color: var(--text); font-size: 0.95rem; margin: 0; }
+
+.reading { list-style: none; margin: 0; }
+.reading li { padding: 14px 0; border-bottom: 1px solid var(--panel-edge); color: var(--text-dim); font-size: 0.92rem; }
+.reading li:last-child { border-bottom: none; }
+.reading b { color: var(--text); font-weight: 600; }
 
 /* ---------- Reveal animation ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theory — AIDrift</title>
+  <meta name="description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, drift equilibria, counter-steering, and scaling laws at 1:43.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <meta property="og:title" content="Theory — AIDrift">
+  <meta property="og:description" content="Vehicle dynamics of drifting: the single-track model, tire slip and the friction circle, drift equilibria, counter-steering, and scaling laws at 1:43.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aidrift.github.io/aidrift/theory.html">
+  <meta property="og:image" content="https://aidrift.github.io/aidrift/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html"><span class="badge43">AI</span>DRIFT</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Overview</a></li>
+      <li><a href="theory.html">Theory</a></li>
+      <li><a href="platform.html">Platform</a></li>
+      <li><a href="autonomy.html">Autonomy</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+    <a class="nav-github" href="https://github.com/aidrift/aidrift" aria-label="GitHub repository" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <h1>Theory of Drifting</h1>
+    <p>
+      A drift is not a loss of control — it is a controlled operating point that happens to be
+      unstable. This page walks through the vehicle dynamics behind it: how a car's motion is
+      described, where tire forces run out, what defines a drift equilibrium, and why a 1:43
+      model is a physically meaningful place to study it.
+    </p>
+    <div class="step-toc">
+      <a href="#state">1. Vehicle state</a>
+      <a href="#bicycle">2. Single-track model</a>
+      <a href="#tires">3. Tire forces</a>
+      <a href="#drift">4. What is a drift</a>
+      <a href="#stability">5. Stability</a>
+      <a href="#scaling">6. Scaling to 1:43</a>
+      <a href="#symbols">7. Symbols</a>
+      <a href="#reading">8. Further reading</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================ 1. STATE ============================ -->
+<section class="section" id="state">
+  <div class="container">
+    <h2>1 — Describing the motion</h2>
+    <div class="prose">
+      <p>
+        Vehicle dynamics is written in a frame attached to the car: <var>x</var> points forward
+        along the chassis, <var>y</var> to the left, and the car rotates about the vertical
+        <var>z</var> axis. In this body frame the planar motion of the vehicle is fully described
+        by three numbers.
+      </p>
+      <ul>
+        <li><b>Longitudinal velocity <var>v<sub>x</sub></var></b> — how fast the car moves along its own nose.</li>
+        <li><b>Lateral velocity <var>v<sub>y</sub></var></b> — how fast it moves sideways. In normal driving this is nearly zero; in a drift it is large.</li>
+        <li><b>Yaw rate <var>r</var></b> — how fast the car rotates about its vertical axis.</li>
+      </ul>
+      <p>
+        The single most important derived quantity is the <strong>side-slip angle</strong>
+        <var>β</var> — the angle between where the car is <em>pointing</em> and where it is
+        actually <em>going</em>:
+      </p>
+      <div class="eq">
+        <var>β</var> = arctan( <var>v<sub>y</sub></var> / <var>v<sub>x</sub></var> )
+        <span class="note">Normal cornering: |β| below about 5°. Drifting: 20–60° and beyond. Side-slip is the number that separates "turning" from "drifting".</span>
+      </div>
+      <p>
+        A car in a drift is therefore moving in one direction while aimed in another. Everything
+        that follows — the tire forces, the equilibrium, the counter-steer — is a consequence of
+        keeping that mismatch stable instead of letting it collapse into a spin.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 2. BICYCLE MODEL ============================ -->
+<section class="section alt" id="bicycle">
+  <div class="container">
+    <h2>2 — The single-track (bicycle) model</h2>
+    <div class="prose">
+      <p>
+        For planar dynamics the two wheels on each axle can be lumped into one. The result — the
+        <strong>single-track</strong> or <strong>bicycle model</strong> — is the workhorse of
+        vehicle dynamics: simple enough to analyze by hand, rich enough to predict real drifting
+        behaviour.
+      </p>
+    </div>
+
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+      <svg viewBox="0 0 720 420" role="img" aria-label="Single-track bicycle model showing side-slip angle beta, steering angle delta, front and rear slip angles, velocity vector and yaw rate">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"/>
+          </marker>
+          <marker id="ah-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--text-dim)"/>
+          </marker>
+        </defs>
+
+        <!-- body reference axis (dashed) -->
+        <line x1="360" y1="260" x2="690" y2="260" stroke="var(--text-dim)" stroke-width="1.5" stroke-dasharray="6 6"/>
+        <text x="668" y="280" fill="var(--text-dim)" font-size="14" font-family="Georgia, serif" font-style="italic">x</text>
+
+        <!-- chassis -->
+        <line x1="200" y1="260" x2="520" y2="260" stroke="var(--heading)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- rear wheel -->
+        <rect x="176" y="250" width="48" height="20" rx="5" fill="var(--bg)" stroke="var(--heading)" stroke-width="2.5"/>
+        <!-- front wheel, steered by delta -->
+        <g transform="rotate(-20 520 260)">
+          <rect x="496" y="250" width="48" height="20" rx="5" fill="var(--bg)" stroke="var(--accent)" stroke-width="2.5"/>
+        </g>
+        <!-- front wheel heading line -->
+        <line x1="520" y1="260" x2="637" y2="217" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 5"/>
+
+        <!-- centre of gravity -->
+        <circle cx="360" cy="260" r="8" fill="var(--accent)"/>
+        <circle cx="360" cy="260" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="330" y="248" fill="var(--accent)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">CoG</text>
+
+        <!-- velocity vector V at CoG -->
+        <line x1="360" y1="260" x2="503" y2="214" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+        <text x="470" y="196" fill="var(--accent)" font-size="17" font-family="Georgia, serif" font-style="italic" font-weight="700">V</text>
+
+        <!-- beta arc -->
+        <path d="M 425 260 A 65 65 0 0 0 421 245" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+        <text x="432" y="244" fill="var(--accent-2)" font-size="16" font-family="Georgia, serif" font-style="italic">β</text>
+
+        <!-- delta arc at front wheel -->
+        <path d="M 575 260 A 55 55 0 0 0 572 241" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+        <text x="583" y="248" fill="var(--accent-2)" font-size="16" font-family="Georgia, serif" font-style="italic">δ</text>
+
+        <!-- rear axle velocity + slip angle -->
+        <line x1="200" y1="260" x2="286" y2="217" stroke="var(--text)" stroke-width="2" marker-end="url(#ah-dim)"/>
+        <text x="258" y="205" fill="var(--text-dim)" font-size="13" font-family="Georgia, serif" font-style="italic">v<tspan baseline-shift="sub" font-size="10">r</tspan></text>
+        <path d="M 246 260 A 46 46 0 0 0 241 238" fill="none" stroke="var(--text-dim)" stroke-width="2"/>
+        <text x="250" y="240" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">α<tspan baseline-shift="sub" font-size="10">r</tspan></text>
+
+        <!-- front axle velocity -->
+        <line x1="520" y1="260" x2="614" y2="243" stroke="var(--text)" stroke-width="2" marker-end="url(#ah-dim)"/>
+        <text x="598" y="272" fill="var(--text-dim)" font-size="13" font-family="Georgia, serif" font-style="italic">v<tspan baseline-shift="sub" font-size="10">f</tspan></text>
+        <path d="M 592 233 A 78 78 0 0 0 596 247" fill="none" stroke="var(--text-dim)" stroke-width="2"/>
+        <text x="602" y="228" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">α<tspan baseline-shift="sub" font-size="10">f</tspan></text>
+
+        <!-- yaw rate arc above CoG -->
+        <path d="M 318 218 A 52 52 0 0 1 402 218" fill="none" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#ah)"/>
+        <text x="352" y="200" fill="var(--accent)" font-size="16" font-family="Georgia, serif" font-style="italic">r</text>
+
+        <!-- dimension lines a and b -->
+        <line x1="200" y1="322" x2="360" y2="322" stroke="var(--text-dim)" stroke-width="1.5" marker-start="url(#ah-dim)" marker-end="url(#ah-dim)"/>
+        <line x1="360" y1="322" x2="520" y2="322" stroke="var(--text-dim)" stroke-width="1.5" marker-start="url(#ah-dim)" marker-end="url(#ah-dim)"/>
+        <line x1="200" y1="270" x2="200" y2="330" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="360" y1="274" x2="360" y2="330" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="520" y1="270" x2="520" y2="330" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="274" y="344" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">b</text>
+        <text x="436" y="344" fill="var(--text-dim)" font-size="15" font-family="Georgia, serif" font-style="italic">a</text>
+
+        <text x="176" y="300" fill="var(--text-dim)" font-size="13" font-family="Montserrat, sans-serif">rear</text>
+        <text x="500" y="300" fill="var(--text-dim)" font-size="13" font-family="Montserrat, sans-serif">front</text>
+      </svg>
+      </div>
+      <figcaption>
+        The single-track model in a left-hand slide. The chassis points along <var>x</var>, but the
+        velocity <var>V</var> at the centre of gravity is rotated away from it by the side-slip
+        angle <var>β</var>. Each axle meets the road at its own slip angle
+        (<var>α<sub>f</sub></var>, <var>α<sub>r</sub></var>) — the mismatch between where that
+        wheel points and where it travels. Steering angle <var>δ</var>, yaw rate <var>r</var>,
+        and the distances <var>a</var>, <var>b</var> from the centre of gravity to the axles
+        complete the picture.
+      </figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>
+        Each axle's slip angle follows from the geometry above — the wheel travels with the body
+        velocity plus the rotation of the chassis about the centre of gravity:
+      </p>
+      <div class="eq">
+        <var>α<sub>f</sub></var> = arctan( (<var>v<sub>y</sub></var> + <var>a</var>&nbsp;<var>r</var>) / <var>v<sub>x</sub></var> ) − <var>δ</var><br>
+        <var>α<sub>r</sub></var> = arctan( (<var>v<sub>y</sub></var> − <var>b</var>&nbsp;<var>r</var>) / <var>v<sub>x</sub></var> )
+        <span class="note">The yaw rate adds <var>a·r</var> of lateral velocity at the front axle and subtracts <var>b·r</var> at the rear — which is why a rotating car loads its two axles very differently.</span>
+      </div>
+      <p>
+        Newton's and Euler's equations in the rotating body frame then give the three equations of
+        motion. Note the <var>v<sub>y</sub> r</var> and <var>v<sub>x</sub> r</var> terms: they are
+        not forces but the consequence of writing dynamics in a frame that itself rotates.
+      </p>
+      <div class="eq">
+        <var>m</var>( <var>v̇<sub>x</sub></var> − <var>v<sub>y</sub></var>&nbsp;<var>r</var> ) = <var>F<sub>xr</sub></var> + <var>F<sub>xf</sub></var> cos <var>δ</var> − <var>F<sub>yf</sub></var> sin <var>δ</var><br>
+        <var>m</var>( <var>v̇<sub>y</sub></var> + <var>v<sub>x</sub></var>&nbsp;<var>r</var> ) = <var>F<sub>yr</sub></var> + <var>F<sub>yf</sub></var> cos <var>δ</var> + <var>F<sub>xf</sub></var> sin <var>δ</var><br>
+        <var>I<sub>z</sub></var>&nbsp;<var>ṙ</var> = <var>a</var>( <var>F<sub>yf</sub></var> cos <var>δ</var> + <var>F<sub>xf</sub></var> sin <var>δ</var> ) − <var>b</var>&nbsp;<var>F<sub>yr</sub></var>
+        <span class="note">Three states, three equations. Everything a drift controller does, it does by choosing <var>δ</var> and the drive force <var>F<sub>xr</sub></var> so that this system settles at the operating point we want.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 3. TIRES ============================ -->
+<section class="section" id="tires">
+  <div class="container">
+    <h2>3 — Where the grip runs out</h2>
+    <div class="prose">
+      <p>
+        The equations above are only as good as the tire forces fed into them. At small slip
+        angles a tire behaves like a spring — lateral force grows in proportion to slip, with the
+        constant of proportionality called <strong>cornering stiffness</strong> <var>C<sub>α</sub></var>:
+      </p>
+      <div class="eq">
+        <var>F<sub>y</sub></var> ≈ − <var>C<sub>α</sub></var>&nbsp;<var>α</var>&nbsp;&nbsp;&nbsp;(small <var>α</var> only)
+        <span class="note">This linear region is where ordinary driving lives, and where the classic understeer/oversteer analysis applies.</span>
+      </div>
+      <p>
+        But grip is finite. As slip grows the force curve bends over, peaks, and then falls away.
+        Beyond the peak the tire is <strong>saturated</strong>: asking for more slip returns less
+        force, not more. That inversion is exactly what makes the far side of the curve
+        treacherous — and it is where a drift lives.
+      </p>
+      <p>
+        Worse, lateral and longitudinal demands compete for the same limited friction. Their
+        combination is bounded by the <strong>friction circle</strong>:
+      </p>
+      <div class="eq">
+        √( <var>F<sub>x</sub></var>² + <var>F<sub>y</sub></var>² ) ≤ <var>μ</var>&nbsp;<var>F<sub>z</sub></var>
+        <span class="note">Every newton spent accelerating is a newton unavailable for cornering. Applying throttle to the rear axle deliberately shrinks its cornering capacity — this is how a drift is initiated and sustained.</span>
+      </div>
+    </div>
+
+    <figure class="diagram reveal">
+      <div class="diagram-scroll">
+      <svg viewBox="0 0 720 340" role="img" aria-label="Left: tire force versus slip angle showing linear region, peak and saturation. Right: friction circle with a saturated force vector.">
+        <!-- ---------- left: Fy vs alpha curve ---------- -->
+        <g transform="translate(20,20)">
+          <text x="0" y="0" fill="var(--heading)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">Lateral force vs. slip angle</text>
+          <!-- axes -->
+          <line x1="20" y1="250" x2="300" y2="250" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <line x1="20" y1="250" x2="20" y2="30" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <text x="278" y="272" fill="var(--text-dim)" font-size="14" font-family="Georgia, serif" font-style="italic">α</text>
+          <text x="-6" y="26" fill="var(--text-dim)" font-size="14" font-family="Georgia, serif" font-style="italic">F<tspan baseline-shift="sub" font-size="10">y</tspan></text>
+          <!-- grip limit line -->
+          <line x1="20" y1="70" x2="300" y2="70" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="5 5"/>
+          <text x="228" y="62" fill="var(--text-dim)" font-size="12" font-family="Georgia, serif" font-style="italic">μF<tspan baseline-shift="sub" font-size="9">z</tspan></text>
+          <!-- curve: linear then peak then fall -->
+          <path d="M 20 250 L 90 105 Q 120 72 160 78 Q 220 88 290 118"
+                fill="none" stroke="var(--accent)" stroke-width="3"/>
+          <!-- linear region highlight -->
+          <line x1="20" y1="250" x2="86" y2="113" stroke="var(--heading)" stroke-width="3"/>
+          <text x="26" y="196" fill="var(--heading)" font-size="12" font-family="Montserrat, sans-serif">linear</text>
+          <text x="26" y="212" fill="var(--heading)" font-size="12" font-family="Montserrat, sans-serif">(grip)</text>
+          <!-- peak marker -->
+          <circle cx="152" cy="77" r="5" fill="var(--accent)"/>
+          <text x="130" y="52" fill="var(--accent)" font-size="12" font-family="Montserrat, sans-serif">peak</text>
+          <!-- saturated region -->
+          <text x="212" y="146" fill="var(--accent-2)" font-size="12" font-family="Montserrat, sans-serif">saturated</text>
+          <text x="212" y="162" fill="var(--accent-2)" font-size="12" font-family="Montserrat, sans-serif">(drift lives here)</text>
+        </g>
+
+        <!-- ---------- right: friction circle ---------- -->
+        <g transform="translate(400,20)">
+          <text x="0" y="0" fill="var(--heading)" font-size="14" font-weight="700" font-family="Montserrat, sans-serif">The friction circle</text>
+          <circle cx="150" cy="150" r="105" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="7 5"/>
+          <!-- axes -->
+          <line x1="20" y1="150" x2="280" y2="150" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <line x1="150" y1="26" x2="150" y2="274" stroke="var(--text-dim)" stroke-width="1.5"/>
+          <text x="258" y="142" fill="var(--text-dim)" font-size="13" font-family="Georgia, serif" font-style="italic">F<tspan baseline-shift="sub" font-size="9">x</tspan></text>
+          <text x="158" y="36" fill="var(--text-dim)" font-size="13" font-family="Georgia, serif" font-style="italic">F<tspan baseline-shift="sub" font-size="9">y</tspan></text>
+          <!-- radius label -->
+          <line x1="150" y1="150" x2="150" y2="45" stroke="var(--text-dim)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="106" y="96" fill="var(--text-dim)" font-size="13" font-family="Georgia, serif" font-style="italic">μF<tspan baseline-shift="sub" font-size="9">z</tspan></text>
+          <!-- vector inside: normal driving -->
+          <line x1="150" y1="150" x2="196" y2="108" stroke="var(--heading)" stroke-width="3" marker-end="url(#ah)"/>
+          <text x="196" y="100" fill="var(--heading)" font-size="11" font-family="Montserrat, sans-serif">normal</text>
+          <!-- vector on the circle: drifting, throttle + lateral -->
+          <line x1="150" y1="150" x2="243" y2="102" stroke="var(--accent)" stroke-width="3" marker-end="url(#ah)"/>
+          <circle cx="243" cy="102" r="5" fill="var(--accent)"/>
+          <text x="200" y="82" fill="var(--accent)" font-size="11" font-family="Montserrat, sans-serif">drifting (at the limit)</text>
+        </g>
+      </svg>
+      </div>
+      <figcaption>
+        Left: lateral force rises almost linearly with slip angle, peaks near the friction limit,
+        then decays. Ordinary driving stays on the rising branch; a drift is sustained on the
+        falling branch, where the rear tires are saturated. Right: longitudinal and lateral forces
+        share one budget — a vector that reaches the circle has no reserve left in any direction.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================ 4. WHAT IS A DRIFT ============================ -->
+<section class="section alt" id="drift">
+  <div class="container">
+    <h2>4 — What a drift actually is</h2>
+    <div class="prose">
+      <p>
+        Set every derivative in the equations of motion to zero — <var>v̇<sub>x</sub></var> =
+        <var>v̇<sub>y</sub></var> = <var>ṙ</var> = 0 — and solve for the states. The solutions are
+        <strong>steady-state cornering equilibria</strong>: combinations of speed, side-slip and
+        yaw rate that the car will hold indefinitely for a given steering angle and drive force.
+      </p>
+      <p>
+        For a given corner, there is usually more than one such solution:
+      </p>
+      <ul>
+        <li>
+          A <b>typical cornering equilibrium</b> with small <var>β</var>, both axles operating in
+          their linear region. This is ordinary driving, and it is <em>stable</em> — disturb it and
+          the car returns on its own.
+        </li>
+        <li>
+          One or more <b>drift equilibria</b> with large <var>β</var>, the rear axle saturated and
+          the front axle still holding grip. These describe a sustained power slide — and they are
+          <em>unstable</em>.
+        </li>
+      </ul>
+      <p>
+        The defining signature of the drift equilibrium is <strong>counter-steering</strong>. In a
+        drift the steering angle takes the same sign as the side-slip angle and the opposite sign to
+        the yaw rate: the car turns right while the front wheels point left. Far from being a
+        corrective reflex, this is a structural property of the equilibrium itself.
+      </p>
+      <div class="callout">
+        <h3>Why counter-steer</h3>
+        <p>
+          With the rear axle saturated, it can no longer generate the lateral force needed to
+          balance the yaw moment. The front axle must supply it. Turning the front wheels
+          <em>away</em> from the corner is what puts them at the slip angle that produces a force
+          opposing the rotation — holding the car at a fixed side-slip instead of letting it spin.
+        </p>
+      </div>
+      <p>
+        The rear drive force plays the complementary role. Through the friction circle, throttle
+        determines how much lateral capability the rear axle has left, and therefore <em>which</em>
+        equilibrium the car can hold. Steering sets the balance; throttle sets the operating point.
+        This is why drifting is fundamentally a two-input control problem.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 5. STABILITY ============================ -->
+<section class="section" id="stability">
+  <div class="container">
+    <h2>5 — Why it is hard: an unstable equilibrium</h2>
+    <div class="prose">
+      <p>
+        Linearize the dynamics about a drift equilibrium and examine the eigenvalues of the
+        resulting system. At a normal cornering equilibrium they lie in the left half-plane — the
+        car self-stabilizes. At a drift equilibrium, one eigenvalue crosses into the right
+        half-plane: the point is a <strong>saddle</strong>.
+      </p>
+      <p>
+        The practical meaning is immediate. Left alone, a car at a drift equilibrium does not stay
+        there. Small perturbations grow exponentially, and the car departs along one of two failure
+        modes:
+      </p>
+      <ul>
+        <li><b>Spin</b> — side-slip grows without bound and the car rotates out of control.</li>
+        <li><b>Grip recovery</b> — side-slip collapses back to zero and the drift simply ends.</li>
+      </ul>
+      <p>
+        Holding a drift therefore requires <em>continuous active stabilization</em>. A human
+        drifter does it by feel, at roughly 2–5 corrections per second. An autonomous controller
+        does it explicitly: estimate the state, compare against the target equilibrium, and correct
+        with steering and throttle — fast enough to catch the instability before it grows.
+      </p>
+      <div class="callout">
+        <h3>The control problem in one sentence</h3>
+        <p>
+          Drift control is the task of stabilizing an open-loop-unstable equilibrium of a nonlinear
+          system whose actuation is bounded by a friction circle — which is why it makes such a good
+          benchmark for both classical control design and learned policies.
+        </p>
+      </div>
+      <p>
+        This is the problem AIDrift is built to study. See the
+        <a href="autonomy.html">Autonomy</a> page for how the estimator and controllers are
+        implemented on the actual car.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 6. SCALING ============================ -->
+<section class="section alt" id="scaling">
+  <div class="container">
+    <h2>6 — Why 1:43 is a real testbed</h2>
+    <div class="prose">
+      <p>
+        A fair objection to any scale model: does a palm-sized car actually drift like a real one,
+        or is it merely a toy that slides? The answer comes from dimensional analysis.
+      </p>
+      <p>
+        For vehicles whose motion is governed by inertia and gravity, dynamic similarity is
+        governed by the <strong>Froude number</strong>:
+      </p>
+      <div class="eq">
+        Fr = <var>v</var>² / ( <var>g</var>&nbsp;<var>L</var> )
+        <span class="note">Matching Fr between model and full scale means matching the balance of inertial and gravitational effects — the same regime, at a different size.</span>
+      </div>
+      <p>
+        Holding Fr constant with a length ratio <var>λ</var> = 1/43 gives the scaling of every
+        other quantity. Velocities scale as <var>√λ</var>, and so do times:
+      </p>
+      <div class="eq">
+        <var>v<sub>model</sub></var> / <var>v<sub>full</sub></var> = √<var>λ</var> = √(1/43) ≈ 0.15
+        <span class="note">A car drifting at 15 km/h at 1:43 scale is dynamically equivalent to roughly 100 km/h at full scale.</span>
+      </div>
+      <p>
+        The consequence for control is the interesting part. Since time also scales as
+        <var>√λ</var>, everything happens about <b>6.6× faster</b> in wall-clock terms. A
+        correction a full-scale driver would have half a second to make must be made in under
+        80 milliseconds here. The instability is the same instability — it just arrives sooner,
+        which is precisely why the platform runs a 100 Hz control loop.
+      </p>
+      <div class="callout">
+        <h3>What does not scale</h3>
+        <p>
+          Rigid-body dynamics scale cleanly; tires do not. Rubber friction depends on contact
+          pressure, temperature and surface in ways that are not captured by a length ratio, and
+          aerodynamic effects are negligible at this size. Results transfer as <em>dynamic
+          behaviour and control structure</em>, not as quantitative tire predictions — a limitation
+          shared by every scaled vehicle platform.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 7. SYMBOLS ============================ -->
+<section class="section" id="symbols">
+  <div class="container">
+    <h2>7 — Symbols</h2>
+    <div class="table-wrap reveal">
+      <table class="bom">
+        <thead>
+          <tr><th>Symbol</th><th>Quantity</th><th>Units</th><th>Typical in drift</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><var>β</var></td><td>Side-slip angle — heading vs. velocity</td><td>deg</td><td>20–60°</td></tr>
+          <tr><td><var>δ</var></td><td>Front steering angle</td><td>deg</td><td>counter-steered</td></tr>
+          <tr><td><var>r</var></td><td>Yaw rate about the vertical axis</td><td>rad/s</td><td>high</td></tr>
+          <tr><td><var>v<sub>x</sub></var>, <var>v<sub>y</sub></var></td><td>Body-frame longitudinal / lateral velocity</td><td>m/s</td><td>both large</td></tr>
+          <tr><td><var>α<sub>f</sub></var>, <var>α<sub>r</sub></var></td><td>Front / rear tire slip angle</td><td>deg</td><td><var>α<sub>r</sub></var> saturated</td></tr>
+          <tr><td><var>F<sub>y</sub></var>, <var>F<sub>x</sub></var></td><td>Lateral / longitudinal tire force</td><td>N</td><td>on the circle</td></tr>
+          <tr><td><var>F<sub>z</sub></var></td><td>Vertical load on the tire</td><td>N</td><td>shifts under accel.</td></tr>
+          <tr><td><var>μ</var></td><td>Coefficient of friction, tire–surface</td><td>—</td><td>low by design</td></tr>
+          <tr><td><var>C<sub>α</sub></var></td><td>Cornering stiffness</td><td>N/rad</td><td>valid only pre-peak</td></tr>
+          <tr><td><var>a</var>, <var>b</var></td><td>CoG to front / rear axle distance</td><td>m</td><td>sets balance</td></tr>
+          <tr><td><var>m</var>, <var>I<sub>z</sub></var></td><td>Mass, yaw moment of inertia</td><td>kg, kg·m²</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 8. READING ============================ -->
+<section class="section alt" id="reading">
+  <div class="container">
+    <h2>8 — Further reading</h2>
+    <p class="lead">Standard references for the material on this page. <!-- TODO: add DOIs / links, and any lab-specific reading --></p>
+    <ul class="reading">
+      <li><b>H. B. Pacejka — <i>Tire and Vehicle Dynamics</i>.</b> The reference on tire force modelling, including the Magic Formula used to fit the curves in section 3.</li>
+      <li><b>R. Rajamani — <i>Vehicle Dynamics and Control</i>.</b> Clear derivation of the single-track model and of stability analysis for lateral vehicle dynamics.</li>
+      <li><b>R. Y. Hindiyeh and J. C. Gerdes — "Equilibrium Analysis of Drifting Vehicles for Control Design."</b> Establishes drift equilibria as unstable steady states and derives controllers that stabilize them.</li>
+      <li><b>E. Velenis et al. — "Steady-State Cornering Equilibria and Stabilisation for a Vehicle During Extreme Operating Conditions."</b> Equilibrium analysis across the full range of cornering conditions, including sustained drift.</li>
+      <li><b>J. Y. Goh and J. C. Gerdes — "Simultaneous Stabilization and Tracking of Basic Automobile Drifting Trajectories."</b> Extends drift stabilization from a fixed equilibrium to tracking a desired path.</li>
+    </ul>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="foot-links">
+    <a href="theory.html">Theory</a>
+    <a href="platform.html">Platform</a>
+    <a href="autonomy.html">Autonomy</a>
+    <a href="research.html">Research</a>
+    <a href="about.html">About</a>
+  </div>
+  <p>Your Lab / University</p>
+  <p>Licensed under the MIT License. © 2026 AIDrift. All rights reserved.</p>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
