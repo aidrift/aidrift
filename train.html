@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Train — Drift43</title>
+  <meta name="description" content="Software pipeline: state estimation, drift control, and learned policies for Drift43.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">DRIFT<span class="badge43">43</span></a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="build.html">Build</a></li>
+      <li><a href="parts.html">Parts</a></li>
+      <li><a href="train.html">Train</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <h1>Software &amp; Training 🧠</h1>
+    <p>
+      The Drift43 stack runs state estimation and control onboard at 100&nbsp;Hz, with an
+      overhead camera providing ground-truth localization for training and evaluation.
+      <!-- TODO: adjust to the real pipeline -->
+    </p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <h2>Pipeline overview</h2>
+    <div class="grid cols-3">
+      <div class="card reveal">
+        <div class="icon">📡</div>
+        <h3>1 — State Estimation</h3>
+        <p>IMU yaw rate and acceleration fused with overhead ArUco poses give the full
+           drift state: velocity, side-slip angle β, and yaw rate.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🎮</div>
+        <h3>2 — Drift Control</h3>
+        <p>A baseline controller stabilizes the drift equilibrium (counter-steer +
+           throttle modulation); a learned policy handles transitions and recovery.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🔁</div>
+        <h3>3 — Learning Loop</h3>
+        <p>Policies are trained in a lightweight simulator fitted to logged data, then
+           fine-tuned on hardware with real rollouts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <h2>Quick start</h2>
+    <p class="lead">Clone the repository, install dependencies, and run your first drift. <!-- TODO: real repo URL --></p>
+    <pre class="code reveal"><span class="c"># clone and install</span>
+git clone https://github.com/YOUR-ORG/drift43.git
+cd drift43
+pip install -e .
+
+<span class="c"># calibrate the car (car stationary, on the track)</span>
+python -m drift43.calibrate --port /dev/ttyUSB0
+
+<span class="c"># start overhead tracking</span>
+python -m drift43.tracker --camera 0 --marker-size 40
+
+<span class="c"># run the baseline drift controller</span>
+python -m drift43.run --controller equilibrium --radius 0.6
+
+<span class="c"># train a policy in simulation, then deploy</span>
+python -m drift43.train --config configs/drift_circle.yaml
+python -m drift43.run --controller learned --checkpoint runs/latest</pre>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Evaluation tasks</h2>
+    <p class="lead">Standard tasks for comparing controllers across builds and labs.</p>
+    <div class="grid cols-2">
+      <div class="card reveal">
+        <h3>🌀 Sustained Circular Drift</h3>
+        <p>Hold a constant-radius drift for 30 s. Metrics: mean side-slip angle,
+           radius tracking error, recovery count.</p>
+      </div>
+      <div class="card reveal">
+        <h3>♾️ Figure-Eight</h3>
+        <p>Chain left and right drifts through the crossover. Metrics: transition
+           time, success rate over 20 attempts.</p>
+      </div>
+      <div class="card reveal">
+        <h3>🅿️ Drift Parking</h3>
+        <p>Slide into a marked box from a straight approach. Metrics: final pose
+           error, overshoot.</p>
+      </div>
+      <div class="card reveal">
+        <h3>👯 Tandem Drift</h3>
+        <p>Two cars hold formation through a drift sequence. Metrics: spacing error,
+           collision-free rate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="foot-links">
+    <a href="build.html">Build</a>
+    <a href="parts.html">Parts</a>
+    <a href="train.html">Train</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p>Your Lab / University</p>
+  <p>Licensed under the MIT License. © 2026 Drift43. All rights reserved.</p>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

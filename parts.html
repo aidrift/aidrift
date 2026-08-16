@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parts — Drift43</title>
+  <meta name="description" content="Bill of materials for the Drift43 autonomous drifting platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">DRIFT<span class="badge43">43</span></a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="build.html">Build</a></li>
+      <li><a href="parts.html">Parts</a></li>
+      <li><a href="train.html">Train</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <h1>Bill of Materials 🧾</h1>
+    <p>
+      Everything needed for one Drift43 car. Prices are approximate and vary by region;
+      links point to example listings. <!-- TODO: verify parts, prices, and links -->
+    </p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="table-wrap reveal">
+      <table class="bom">
+        <thead>
+          <tr>
+            <th>#</th><th>Component</th><th>Purpose</th><th>Qty</th><th class="price">Est. price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>1:43 RC chassis (donor car)</td><td>Drivetrain, wheels, base frame</td><td>1</td><td class="price">$25</td></tr>
+          <tr><td>2</td><td>Raspberry Pi Zero 2 W</td><td>Onboard compute</td><td>1</td><td class="price">$18</td></tr>
+          <tr><td>3</td><td>Micro servo (proportional)</td><td>Continuous steering control</td><td>1</td><td class="price">$8</td></tr>
+          <tr><td>4</td><td>Coreless DC motor</td><td>Rear-wheel drive</td><td>1</td><td class="price">$6</td></tr>
+          <tr><td>5</td><td>DRV8833 motor driver</td><td>PWM motor control</td><td>1</td><td class="price">$4</td></tr>
+          <tr><td>6</td><td>IMU (BMI270 / MPU-9250)</td><td>Yaw rate &amp; acceleration sensing</td><td>1</td><td class="price">$9</td></tr>
+          <tr><td>7</td><td>1S LiPo 300–500 mAh + charger</td><td>Power</td><td>1</td><td class="price">$15</td></tr>
+          <tr><td>8</td><td>5 V boost converter</td><td>Stable logic power from 1S</td><td>1</td><td class="price">$4</td></tr>
+          <tr><td>9</td><td>Drift tire rings (printed/PVC)</td><td>Low, consistent lateral grip</td><td>4</td><td class="price">$3</td></tr>
+          <tr><td>10</td><td>3D-printed mounts &amp; linkage</td><td>Servo mount, controller plate, marker plate</td><td>1 set</td><td class="price">$5</td></tr>
+          <tr><td>11</td><td>USB webcam (1080p, 60 fps)</td><td>Overhead localization (one per track)</td><td>1</td><td class="price">$35</td></tr>
+          <tr><td>12</td><td>Fasteners, wire, connectors</td><td>Assembly</td><td>—</td><td class="price">$8</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="4">Total per car (excl. shared overhead camera)</td><td class="price">≈ $105</td></tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="grid cols-3" style="margin-top: 32px;">
+      <div class="card reveal">
+        <div class="icon">🖨️</div>
+        <h3>3D-Printed Parts</h3>
+        <p>All STL files are in the repository. PLA works fine; print drift rings in a
+           harder plastic (PETG/ABS) for consistent grip. <!-- TODO: repo link --></p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">📦</div>
+        <h3>Where to Buy</h3>
+        <p>Everything is available from common electronics distributors and hobby shops.
+           No custom PCBs or machined parts required.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🏁</div>
+        <h3>The Track</h3>
+        <p>Any smooth, hard floor works — laminate, linoleum, sealed concrete. Mark the
+           course with tape; a 2×3 m area is enough for full drift maneuvers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="foot-links">
+    <a href="build.html">Build</a>
+    <a href="parts.html">Parts</a>
+    <a href="train.html">Train</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p>Your Lab / University</p>
+  <p>Licensed under the MIT License. © 2026 Drift43. All rights reserved.</p>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

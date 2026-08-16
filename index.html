@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drift43 — Autonomous 1:43 Scale Drifting</title>
+  <meta name="description" content="Drift43: an open-source, palm-sized autonomous drifting platform at 1:43 scale for robotics research and education.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">DRIFT<span class="badge43">43</span></a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="build.html">Build</a></li>
+      <li><a href="parts.html">Parts</a></li>
+      <li><a href="train.html">Train</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1>Autonomous Drifting<br>at <span class="accent">1:43 Scale</span></h1>
+    <p class="tagline">
+      An open-source, palm-sized platform for studying controlled vehicle drift —
+      high side-slip maneuvers, tabletop-sized tracks, research-grade autonomy under $200.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="build.html">Build Your Own</a>
+      <a class="btn btn-ghost" href="#abstract">Read the Abstract</a>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="grid cols-4">
+      <div class="card stat reveal"><div class="num">1:43</div><div class="lbl">Scale</div></div>
+      <div class="card stat reveal"><div class="num">&lt;$200</div><div class="lbl">Total budget</div></div>
+      <div class="card stat reveal"><div class="num">60°+</div><div class="lbl">Side-slip angle</div></div>
+      <div class="card stat reveal"><div class="num">100 Hz</div><div class="lbl">Control loop</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="abstract">
+  <div class="container">
+    <div class="paper reveal">
+      <h3>Drift43: An Open-Source Platform for Autonomous Drifting at 1:43 Scale</h3>
+      <p class="authors">
+        <!-- TODO: replace with the real author list -->
+        Author One · Author Two · Author Three · Author Four
+      </p>
+      <p class="affil"><!-- TODO: affiliation -->Your Lab / University, City, Country</p>
+      <p class="abstract">
+        <b>Abstract</b> — Drifting — driving at the limit of tire adhesion with sustained,
+        controlled side slip — is one of the most demanding control problems in autonomous
+        driving. Full-scale drift research requires closed proving grounds, expensive vehicles,
+        and significant safety infrastructure, placing it out of reach for most labs and
+        classrooms. We present <b>Drift43</b>, an open-source autonomous drifting platform at
+        1:43 scale that brings aggressive, at-the-limit vehicle dynamics onto a tabletop.
+        The platform combines a low-cost chassis, an onboard IMU, and overhead visual
+        localization with a lightweight drift controller that sustains high side-slip
+        cornering, transient drift initiation, and tandem maneuvers on tracks that fit
+        inside a typical classroom. Every component — hardware, firmware, controller, and
+        training pipeline — is documented and reproducible with off-the-shelf parts.
+        By shrinking drift research to pocket scale, Drift43 aims to make the study of
+        at-the-limit autonomy accessible to students and researchers everywhere.
+        <!-- TODO: replace placeholder abstract with the real one -->
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2>Welcome to <span class="accent">Drift43</span> 🏎️💨</h2>
+    <p class="lead">
+      Drift43 is a low-cost, open-source platform for research and education in
+      at-the-limit vehicle control. On a track the size of a desk, it initiates,
+      sustains, and chains drifts — the same control problem studied on full-scale
+      vehicles, at a fraction of the cost and risk.
+    </p>
+    <div class="grid cols-3">
+      <div class="card reveal">
+        <div class="icon">🔧</div>
+        <h3>Easy to Build</h3>
+        <p>Off-the-shelf 1:43 chassis, a handful of components, and 3D-printed mounts.
+           Full step-by-step instructions in the Build section.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🧠</div>
+        <h3>Research-Grade Autonomy</h3>
+        <p>State estimation from IMU + overhead camera, drift controllers from classic
+           equilibrium analysis to learned policies.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon">🎓</div>
+        <h3>Made for Education</h3>
+        <p>Vehicle dynamics, control theory, and machine learning in one hands-on
+           platform that fits in a classroom — or your pocket.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <h2>Demonstrations</h2>
+    <p class="lead">
+      Real-time demonstrations of Drift43 in action: sustained circular drifts, figure-eight
+      transitions, and tandem runs. <!-- TODO: replace placeholders with real videos -->
+    </p>
+    <div class="grid cols-2">
+      <figure class="reveal">
+        <div class="media-ph">▶ VIDEO PLACEHOLDER<br>Sustained circular drift</div>
+        <figcaption>Sustained drift around a constant-radius circle</figcaption>
+      </figure>
+      <figure class="reveal">
+        <div class="media-ph">▶ VIDEO PLACEHOLDER<br>Figure-eight transitions</div>
+        <figcaption>Transient drift initiation and direction switching</figcaption>
+      </figure>
+      <figure class="reveal">
+        <div class="media-ph">▶ VIDEO PLACEHOLDER<br>Tandem drifting</div>
+        <figcaption>Two cars drifting in tandem formation</figcaption>
+      </figure>
+      <figure class="reveal">
+        <div class="media-ph">▶ VIDEO PLACEHOLDER<br>Full track run</div>
+        <figcaption>Complete autonomous lap with chained drifts</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="foot-links">
+    <a href="build.html">Build</a>
+    <a href="parts.html">Parts</a>
+    <a href="train.html">Train</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p><!-- TODO: affiliation -->Your Lab / University</p>
+  <p>Licensed under the MIT License. © 2026 Drift43. All rights reserved.</p>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

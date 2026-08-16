@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build — Drift43</title>
+  <meta name="description" content="Step-by-step build instructions for the Drift43 autonomous drifting platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">DRIFT<span class="badge43">43</span></a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="build.html">Build</a></li>
+      <li><a href="parts.html">Parts</a></li>
+      <li><a href="train.html">Train</a></li>
+      <li><a href="team.html">Team</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="container">
+    <h1>Build Instructions 🔧</h1>
+    <p>
+      Assembling a Drift43 car takes roughly one afternoon with basic tools: a small
+      Phillips screwdriver, a soldering iron, and tweezers. Before starting, order
+      everything on the <a href="parts.html">Parts</a> page and print the mounts
+      (STL files in the repository). <!-- TODO: link repository -->
+    </p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+
+    <div class="step reveal">
+      <div class="no">1</div>
+      <div>
+        <h3>Prepare the chassis</h3>
+        <p>Disassemble the stock 1:43 chassis: remove the body shell, stock electronics,
+           and the front steering assembly. Keep the drivetrain and wheels.</p>
+        <ul>
+          <li>Remove the two body clips and lift off the shell</li>
+          <li>Unscrew the stock PCB and set it aside</li>
+          <li>Check that the rear axle spins freely</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Bare chassis</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">2</div>
+      <div>
+        <h3>Fit the drift tires</h3>
+        <p>Swap the stock rubber tires for low-grip drift rings. Consistent, low
+           lateral grip is what makes controlled side slip possible at this scale.</p>
+        <ul>
+          <li>Slide the stock tires off the rims</li>
+          <li>Fit the printed/PVC drift rings on all four wheels</li>
+          <li>Verify all four wheels have the same diameter</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Drift tires fitted</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">3</div>
+      <div>
+        <h3>Install steering servo</h3>
+        <p>Replace the stock bang-bang steering magnet with a micro proportional servo —
+           continuous steering control is essential for holding a drift.</p>
+        <ul>
+          <li>Glue the servo mount into the front bay</li>
+          <li>Connect the servo horn to the steering knuckles with the printed linkage</li>
+          <li>Center the servo before tightening the horn screw</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Servo installed</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">4</div>
+      <div>
+        <h3>Solder the electronics</h3>
+        <p>Wire the motor driver, IMU, and receiver to the controller board according to
+           the wiring diagram. Keep leads short — space is tight at 1:43.</p>
+        <ul>
+          <li>Solder motor leads to the driver outputs</li>
+          <li>Connect the IMU over I²C (keep the wires twisted)</li>
+          <li>Connect servo signal, 5&nbsp;V, and GND</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Wiring complete</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">5</div>
+      <div>
+        <h3>Mount controller and battery</h3>
+        <p>Stack the controller board on the printed plate above the rear axle and fit
+           the 1S LiPo as low and as central as possible — weight distribution strongly
+           affects drift balance.</p>
+        <ul>
+          <li>Screw the controller to the printed plate</li>
+          <li>Velcro the battery into the center bay</li>
+          <li>Check the center of mass sits just behind the midpoint</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Electronics stacked</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">6</div>
+      <div>
+        <h3>Add the tracking marker</h3>
+        <p>Attach the ArUco marker plate on top of the car. The overhead camera uses it
+           for position and heading ground truth during data collection and evaluation.</p>
+        <ul>
+          <li>Print the marker at exactly the specified size</li>
+          <li>Mount it flat — any tilt biases the heading estimate</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>Marker mounted</div>
+    </div>
+
+    <div class="step reveal">
+      <div class="no">7</div>
+      <div>
+        <h3>Flash the firmware and calibrate</h3>
+        <p>Flash the firmware, calibrate the IMU and steering center, and run the
+           first system check. See the <a href="train.html">Train</a> page for the
+           software pipeline.</p>
+        <ul>
+          <li>Flash firmware over USB</li>
+          <li>Run <code>calibrate_imu</code> with the car stationary</li>
+          <li>Trim steering center until the car tracks straight</li>
+        </ul>
+      </div>
+      <div class="media-ph">📷 PHOTO PLACEHOLDER<br>First test run</div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="container">
+    <h2>Assembly video</h2>
+    <p class="lead">Full assembly walkthrough from box of parts to first drift. <!-- TODO: real video --></p>
+    <div class="media-ph reveal">▶ VIDEO PLACEHOLDER — Full assembly walkthrough</div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="foot-links">
+    <a href="build.html">Build</a>
+    <a href="parts.html">Parts</a>
+    <a href="train.html">Train</a>
+    <a href="team.html">Team</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <p>Your Lab / University</p>
+  <p>Licensed under the MIT License. © 2026 Drift43. All rights reserved.</p>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
